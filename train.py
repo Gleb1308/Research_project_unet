@@ -11,7 +11,7 @@ from Model_data.data_generator import CustomDataGen
 from Loss_metric.metric import Dice_score
 
 def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_load, path_img_train,
-        path_img_test, checkpoint_path_save, save_weights, use_pretrained, save_plot, eval_only, **model_params):
+        path_img_test, checkpoint_path_save, save_weights, use_pretrained, save_plot, eval_only, epoch_save=None, save_mode='series', **model_params):
 
   num_channels = 3
   # creating a model
@@ -30,7 +30,12 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
   if not eval_only:
     # training the model using data generator
     traingen = CustomDataGen(y_group, path_img_train, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
-    model_history = unet.fit(traingen, epochs=EPOCHS)
+    if epoch_save is not None:
+      checkpoint_path = (checkpoint_path_save + "cp.ckpt") if save_mode!='series' else (checkpoint_path_save + "{epoch:04d}.ckpt")
+      n_batches = len(traingen) 
+      checkpoint_dir = os.path.dirname(checkpoint_path)
+      cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, verbose=1, save_weights_only=True, save_freq=epoch_save*n_batches)
+    model_history = unet.fit(traingen, epochs=EPOCHS, callbacks=[cp_callback])
     if save_plot:
       fig, axs = plt.subplots(1, 2, figsize=(12, 6))
       train_loss = model_history.history['loss']
@@ -44,7 +49,7 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
       fig.savefig('./Saved history loss_metric/loss_metric_UnetModel.png')
 
     #checkpoint_path_save = "./checkpoints/my_checkpoint"
-    if save_weights:
+    if save_weights and (epoch_save is None):
       unet.save_weights(f"{checkpoint_path_save}")
 
     print('evaluation\n')
@@ -86,6 +91,9 @@ if __name__=="__main__":
   parser.add_argument('--path_y_train', type=str, default="./small-subset-of-airbus-ship-segmentation-dataset/train_ship_segmentations_v2.csv",
                                                 help='path to the masks encoding (run-length encoding format)')
   parser.add_argument('--drop_prob', type=float, default=0.3, help='dropout rate')
+  parser.add_argument('--epoch_save', type=int, default=5, help='periods of epochs after which to save the model')
+  parser.add_argument('--save_mode', type=str, default='series', help='series - save new weights after each period of epochs, other - save and replace new weights')
+        
   args = parser.parse_args()
   # unify all encoded pixels that belong to one image
   y_train = pd.read_csv(args.path_y_train)
@@ -95,4 +103,4 @@ if __name__=="__main__":
   # call train() with all arguments; it will return the model, history of training loss and metric, loss and dice score on the test data
   unet, hist, loss, dice_score = train(y_group, args.epochs, args.img_height, args.img_width, args.batch_size, args.checkpoint_path_load,
         args.path_img_train, args.path_img_test, args.checkpoint_path_save, args.save_weights, args.use_pretrained, args.save_plot, args.eval_only, 
-        drop_prob=args.drop_prob)
+        epoch_save=args.epoch_save, save_mode=args.save_mode, drop_prob=args.drop_prob)
