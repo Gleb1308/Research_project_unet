@@ -52,7 +52,8 @@ if __name__=="__main__":
   parser.add_argument('--img_height', type=int, default=128, help='images will be rescaled to such height, should be a power of two')
   parser.add_argument('--img_width', type=int, default=128, help='images will be rescaled to such width, should be a power of two')
   parser.add_argument('--name_pict', type=str, default='True vs predicted masks', help='file name where to save the results of inferencing')
-
+  parser.add_argument('--drop_prob', type=float, default=0.3, help='dropout rate')
+  
   args = parser.parse_args()
   # unify all encoded pixels that belong to the same image
   y_train = pd.read_csv(args.path_y_train)
@@ -62,7 +63,7 @@ if __name__=="__main__":
 
   # create the model
   tf.keras.backend.clear_session()
-  unet = unet_model((args.img_height, args.img_width, 3))
+  unet = unet_model((args.img_height, args.img_width, 3), drop_prob=args.drop_prob)
   # load weights for the model and generate images for inferencing
   unet.load_weights(args.checkpoint_path_load).expect_partial()
   gen = CustomDataGen(y_group, args.path_infer, args.num_pict, use_bool=False, resize=True, height=args.img_height, width=args.img_width)
