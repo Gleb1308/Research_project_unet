@@ -11,7 +11,7 @@ from Model_data.data_generator import CustomDataGen
 from Loss_metric.metric import Dice_score
 
 def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_load, path_img_train,
-        path_img_test, checkpoint_path_save, save_weights, use_pretrained, save_plot, eval_only):
+        path_img_test, checkpoint_path_save, save_weights, use_pretrained, save_plot, eval_only, **model_params):
 
   num_channels = 3
   # creating a model
