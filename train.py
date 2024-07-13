@@ -16,7 +16,7 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
   num_channels = 3
   # creating a model
   tf.keras.backend.clear_session()
-  unet = unet_model((img_height, img_width, num_channels))
+  unet = unet_model((img_height, img_width, num_channels), **model_params)
   # defining loss function and optimizer
   var_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
   var_optimizer = tf.keras.optimizers.experimental.RMSprop()
@@ -83,6 +83,7 @@ if __name__=="__main__":
   parser.add_argument('--eval_only', action='store_true', help='whether to evaluate model without training')
   parser.add_argument('--path_y_train', type=str, default="./small-subset-of-airbus-ship-segmentation-dataset/train_ship_segmentations_v2.csv",
                                                 help='path to the masks encoding (run-length encoding format)')
+  parser.add_argument('--drop_prob', type=float, default=0.3, help='path to the masks encoding (run-length encoding format)')
   args = parser.parse_args()
   # unify all encoded pixels that belong to one image
   y_train = pd.read_csv(args.path_y_train)
@@ -91,4 +92,5 @@ if __name__=="__main__":
   y_group = y_group.str.split(' ')
   # call train() with all arguments; it will return the model, history of training loss and metric, loss and dice score on the test data
   unet, hist, loss, dice_score = train(y_group, args.epochs, args.img_height, args.img_width, args.batch_size, args.checkpoint_path_load,
-        args.path_img_train, args.path_img_test, args.checkpoint_path_save, args.save_weights, args.use_pretrained, args.save_plot, args.eval_only)
+        args.path_img_train, args.path_img_test, args.checkpoint_path_save, args.save_weights, args.use_pretrained, args.save_plot, args.eval_only, 
+        drop_prob=args.drop_prob)
