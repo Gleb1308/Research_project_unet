@@ -40,7 +40,7 @@ this generator you can check in Model_data/data_generator.py file. During traini
 Also were tested optimizers - Adam and RmsProp, metric - dice_score (see its implementation in Loss_metric/metric.py file).
 Each model trained 40 epochs with batch_size=32. Adam has nearly the same results with bfce and bce (68-69% dice_score). RmsProp gave the best result -
 nearly 70% dice_score. To sum up, the best results gave us bce with adam and rmsprop (they had the most stable training and one of the best dice_scores).
-All information bout testing results of different models you can find in the "Test_results" folder, weights to this will be in "Pretrained_models" folder.
+All information about testing results of different models you can find in the "Test_results" folder, weights to this will be in "Pretrained_models" folder.
 
 # Pretrained weights
 
