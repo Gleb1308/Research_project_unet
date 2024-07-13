@@ -31,7 +31,7 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
     # training the model using data generator
     traingen = CustomDataGen(y_group, path_img_train, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
     if epoch_save is not None:
-      checkpoint_path = (checkpoint_path_save + "cp.ckpt") if save_mode!='series' else (checkpoint_path_save + "{epoch:04d}.ckpt")
+      checkpoint_path = (checkpoint_path_save + ".ckpt") if save_mode!='series' else (checkpoint_path_save + "-{epoch:04d}.ckpt")
       n_batches = len(traingen) 
       checkpoint_dir = os.path.dirname(checkpoint_path)
       cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, verbose=1, save_weights_only=True, save_freq=epoch_save*n_batches)
