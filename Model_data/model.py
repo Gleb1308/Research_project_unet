@@ -32,14 +32,14 @@ def upsampling_block(expansive_input, contractive_input, n_filters=32):      # c
   conv = Conv2D(n_filters, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv)
   return conv
 
-def unet_model(input_size=(128, 128, 3), n_filters=32, n_classes=1):    # create whole unet-model
+def unet_model(input_size=(128, 128, 3), n_filters=32, n_classes=1, drop_prob=0.3):    # create whole unet-model
   inputs = Input(input_size)
   # encoder
   cblock1 = conv_block(inputs, n_filters)
   cblock2 = conv_block(cblock1[0], 2*n_filters)
   cblock3 = conv_block(cblock2[0], 4*n_filters)
-  cblock4 = conv_block(cblock3[0], 8*n_filters, dropout_prob=0.3)
-  cblock5 = conv_block(cblock4[0], 16*n_filters, dropout_prob=0.3, max_pooling=False)   # bottleneck
+  cblock4 = conv_block(cblock3[0], 8*n_filters, dropout_prob=drop_prob)
+  cblock5 = conv_block(cblock4[0], 16*n_filters, dropout_prob=drop_prob, max_pooling=False)   # bottleneck
   # decoder
   ublock6 = upsampling_block(cblock5[0], cblock4[1],  8*n_filters)
   ublock7 = upsampling_block(ublock6, cblock3[1],  4*n_filters)
