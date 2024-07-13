@@ -83,7 +83,7 @@ if __name__=="__main__":
   parser.add_argument('--eval_only', action='store_true', help='whether to evaluate model without training')
   parser.add_argument('--path_y_train', type=str, default="./small-subset-of-airbus-ship-segmentation-dataset/train_ship_segmentations_v2.csv",
                                                 help='path to the masks encoding (run-length encoding format)')
-  parser.add_argument('--drop_prob', type=float, default=0.3, help='path to the masks encoding (run-length encoding format)')
+  parser.add_argument('--drop_prob', type=float, default=0.3, help='dropout rate')
   args = parser.parse_args()
   # unify all encoded pixels that belong to one image
   y_train = pd.read_csv(args.path_y_train)
