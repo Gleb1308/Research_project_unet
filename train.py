@@ -52,14 +52,16 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
     loss, dice_score = unet.evaluate(testgen)
     print('loss on test images = {}\n'.format(loss))
     print('dice score on test images = {}\n'.format(dice_score))
+    model_history = model_history.history
   else:     # you can only evaluate already loaded model
     print('evaluation\n')
     testgen = CustomDataGen(y_group, path_img_test, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
     loss, dice_score = unet.evaluate(testgen)
+    model_history = None
     print('loss on test images = {}\n'.format(loss))
     print('dice score on test images = {}\n'.format(dice_score))
-
-  return unet, model_history.history, loss, dice_score    # loss ans dice_score are evaluated on the test data
+  
+  return unet, model_history, loss, dice_score    # loss ans dice_score are evaluated on the test data
 
 if __name__=="__main__":
   # reading arguments from the command line
