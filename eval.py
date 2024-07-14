@@ -44,7 +44,10 @@ if __name__=="__main__":
   testgen = CustomDataGen(y_group, args.path_img_test, args.batch_size, use_bool=False, resize=True, height=args.img_height, width=args.img_width)
 
   for model_path, model_name in zip(model_paths, model_names):
-    unet.load_weights(model_path).expect_partial()
+    try:
+      unet.load_weights(model_path).expect_partial()
+    except NotFoundError:
+      continue
     loss, dice_score = unet.evaluate(testgen)
     d['model'].append(model_name)
     d['test_loss'].append(loss)
