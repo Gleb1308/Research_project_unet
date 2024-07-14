@@ -7,6 +7,7 @@ sns.set_theme()
 import os
 from Model_data.model import unet_model
 from Model_data.data_generator import CustomDataGen
+from Loss_metric.metric import Dice_score
 import argparse
 from copy import copy
 
@@ -41,18 +42,21 @@ if __name__=="__main__":
 
   tf.keras.backend.clear_session()
   unet = unet_model((args.img_height, args.img_width, 3))
+  var_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+  var_optimizer = tf.keras.optimizers.experimental.RMSprop()
+  unet.compile(optimizer=var_optimizer, loss=var_loss, metrics=[Dice_score()])
   testgen = CustomDataGen(y_group, args.path_img_test, args.batch_size, use_bool=False, resize=True, height=args.img_height, width=args.img_width)
 
   for model_path, model_name in zip(model_paths, model_names):
     try:
       unet.load_weights(model_path).expect_partial()
-    except NotFoundError:
+    except tf.errors.NotFoundError:
       continue
     loss, dice_score = unet.evaluate(testgen)
     d['model'].append(model_name)
     d['test_loss'].append(loss)
     d['test_metric'].append(dice_score)
 
-  df = pd.DataFram(d)
+  df = pd.DataFrame(d)
   df_sort = df.sort_values(by='test_metric', ascending=False, ignore_index=True)
   df_sort.to_csv('./Test_results/models_eval.csv')
