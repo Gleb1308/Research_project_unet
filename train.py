@@ -30,7 +30,8 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
   if not eval_only:
     # training the model using data generator
     traingen = CustomDataGen(y_group, path_img_train, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='Dice_score')
+    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='Dice_score', 
+                                                     mode='max')
     model_history = unet.fit(traingen, epochs=EPOCHS, callbacks=[cp_callback])
     if save_plot:
       fig, axs = plt.subplots(1, 2, figsize=(12, 6))
@@ -93,7 +94,8 @@ if __name__=="__main__":
                                                 help='path to the masks encoding (run-length encoding format)')
   parser.add_argument('--drop_prob', type=float, default=0.3, help='dropout rate')
   parser.add_argument('--epoch_save', type=int, default=None, help='periods of epochs after which to save the model')
-  parser.add_argument('--save_mode', type=str, default='series', help='series - save new weights after each period of epochs, other - save and replace new weights')
+  parser.add_argument('--save_mode', type=str, default='series', 
+                      help='series - save new weights after each period of epochs, other - save and replace new weights')
         
   args = parser.parse_args()
   # unify all encoded pixels that belong to one image
@@ -102,6 +104,6 @@ if __name__=="__main__":
   y_group = y_train.groupby(by='ImageId')['EncodedPixels'].sum()
   y_group = y_group.str.split(' ') 
   # call train() with all arguments; it will return the model, history of training loss and metric, loss and dice score on the test data
-  unet, hist, loss, dice_score = train(y_group, args.epochs, args.img_height, args.img_width, args.batch_size, args.checkpoint_path_load,
-        args.path_img_train, args.path_img_test, args.best_path_save, args.final_path_save, args.plot_path_save, args.save_weights, args.use_pretrained, args.save_plot, args.eval_only, 
-        drop_prob=args.drop_prob)
+  unet, hist, loss, dice_score = train(y_group, args.epochs, args.img_height, args.img_width, args.batch_size, args.checkpoint_path_load, args.path_img_train, 
+                                       args.path_img_test, args.best_path_save, args.final_path_save, args.plot_path_save, args.save_weights, 
+                                       args.use_pretrained, args.save_plot, args.eval_only, drop_prob=args.drop_prob)
