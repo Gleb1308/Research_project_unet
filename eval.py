@@ -52,6 +52,7 @@ if __name__=="__main__":
       unet.load_weights(model_path).expect_partial()
     except tf.errors.NotFoundError:
       continue
+    print('model = {}'.format(model_name))
     loss, dice_score = unet.evaluate(testgen)
     d['model'].append(model_name)
     d['test_loss'].append(loss)
