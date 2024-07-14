@@ -40,7 +40,7 @@ if __name__=="__main__":
   y_group = y_group.str.split(' ')
 
   tf.keras.backend.clear_session()
-  unet = unet_model((args.img_height, args.img_width, 3), drop_prob=args.drop_prob)
+  unet = unet_model((args.img_height, args.img_width, 3))
   testgen = CustomDataGen(y_group, args.path_img_test, args.batch_size, use_bool=False, resize=True, height=args.img_height, width=args.img_width)
 
   for model_path, model_name in zip(model_paths, model_names):
