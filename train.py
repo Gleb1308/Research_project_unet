@@ -93,9 +93,6 @@ if __name__=="__main__":
   parser.add_argument('--path_y_train', type=str, default="./small-subset-of-airbus-ship-segmentation-dataset/train_ship_segmentations_v2.csv",
                                                 help='path to the masks encoding (run-length encoding format)')
   parser.add_argument('--drop_prob', type=float, default=0.3, help='dropout rate')
-  parser.add_argument('--epoch_save', type=int, default=None, help='periods of epochs after which to save the model')
-  parser.add_argument('--save_mode', type=str, default='series', 
-                      help='series - save new weights after each period of epochs, other - save and replace new weights')
         
   args = parser.parse_args()
   # unify all encoded pixels that belong to one image
