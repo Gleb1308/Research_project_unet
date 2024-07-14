@@ -8,6 +8,7 @@ import os
 from Model_data.model import unet_model
 from Model_data.data_generator import CustomDataGen
 import argparse
+from copy import copy
 
 
 if __name__=="__main__":
@@ -19,7 +20,7 @@ if __name__=="__main__":
   parser.add_argument('--batch_size', type=int, default=32)
   parser.add_argument('--model_paths', type=str, default="./checkpoints/my_checkpoint",
                                                 help='from here will be downloaded weights of pretrained models')
-  parser.add_argument('--model_names', type=str, default="./checkpoints/my_checkpoint", help='names of the downloaded models')
+  parser.add_argument('--model_names', type=str, default=None, help='names of the downloaded models')
   parser.add_argument('--path_img_test', type=str, default="small-subset-of-airbus-ship-segmentation-dataset/test_v2/",
                                                     help='from here will be generated batches of images for testing')
   parser.add_argument('--path_y_train', type=str, default="./small-subset-of-airbus-ship-segmentation-dataset/train_ship_segmentations_v2.csv",
@@ -27,7 +28,10 @@ if __name__=="__main__":
 
   args = parser.parse_args()
   model_paths = args.model_paths.split(',')
-  model_names = args.model_names.split(',')
+  if args.model_names is None:
+    model_names = copy(model_paths)
+  else:
+    model_names = args.model_names.split(',')
   d = {'model':[], 'test_loss':[], 'test_metric':[]}
   # unify all encoded pixels that belong to the same image
   y_train = pd.read_csv(args.path_y_train)
@@ -47,4 +51,5 @@ if __name__=="__main__":
     d['test_metric'].append(dice_score)
 
   df = pd.DataFram(d)
-  df.to_csv('./Test_results/models_eval.csv')
+  df_sort = df.sort_values(by='test_metric', ascending=False, ignore_index=True)
+  df_sort.to_csv('./Test_results/models_eval.csv')
