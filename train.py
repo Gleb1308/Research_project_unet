@@ -30,7 +30,7 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
   if not eval_only:
     # training the model using data generator
     traingen = CustomDataGen(y_group, path_img_train, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='val_Dice_score')
+    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='Dice_score')
     model_history = unet.fit(traingen, epochs=EPOCHS, callbacks=[cp_callback])
     if save_plot:
       fig, axs = plt.subplots(1, 2, figsize=(12, 6))
