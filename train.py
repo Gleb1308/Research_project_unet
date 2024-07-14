@@ -10,8 +10,8 @@ from Model_data.model import unet_model
 from Model_data.data_generator import CustomDataGen
 from Loss_metric.metric import Dice_score
 
-def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_load, path_img_train,
-        path_img_test, checkpoint_path_save, save_weights, use_pretrained, save_plot, eval_only, epoch_save=None, save_mode='series', **model_params):
+def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_load, path_img_train, path_img_test, best_path_save, final_path_save, 
+          plot_path_save, save_weights, use_pretrained, save_plot, eval_only, **model_params):
 
   num_channels = 3
   # creating a model
@@ -30,11 +30,7 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
   if not eval_only:
     # training the model using data generator
     traingen = CustomDataGen(y_group, path_img_train, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
-    if epoch_save is not None:
-      checkpoint_path = (checkpoint_path_save + ".ckpt") if save_mode!='series' else (checkpoint_path_save + "-{epoch:04d}.ckpt")
-      n_batches = len(traingen) 
-      checkpoint_dir = os.path.dirname(checkpoint_path)
-      cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, verbose=1, save_weights_only=True, save_freq=epoch_save*n_batches)
+    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='val_Dice_score')
     model_history = unet.fit(traingen, epochs=EPOCHS, callbacks=[cp_callback])
     if save_plot:
       fig, axs = plt.subplots(1, 2, figsize=(12, 6))
@@ -45,12 +41,13 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
       axs[1].plot(train_metric)
       axs[1].set_title('Train metric')
       plt.show()
-      os.makedirs('./Saved history loss_metric', exist_ok=True)
-      fig.savefig('./Saved history loss_metric/loss_metric_UnetModel.png')
+      dir_plot = os.path.dirname(plot_path_save)
+      os.makedirs(dir_plot, exist_ok=True)
+      fig.savefig(plot_path_save)
 
     #checkpoint_path_save = "./checkpoints/my_checkpoint"
-    if save_weights and (epoch_save is None):
-      unet.save_weights(f"{checkpoint_path_save}")
+    if save_weights:
+      unet.save_weights(f"{final_path_save}")
 
     print('evaluation\n')
     testgen = CustomDataGen(y_group, path_img_test, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
@@ -82,8 +79,12 @@ if __name__=="__main__":
                                                    help='from here will be generated batches of images for training')
   parser.add_argument('--path_img_test', type=str, default="small-subset-of-airbus-ship-segmentation-dataset/test_v2/",
                                                    help='from here will be generated batches of images for testing')
-  parser.add_argument('--checkpoint_path_save', type=str, default="./checkpoints/my_checkpoint",
-                                                    help='here will be saved weights of trained model')
+  parser.add_argument('--best_path_save', type=str, default="./checkpoints/my_checkpoint",
+                                                    help='here will be saved best weights of the trained model')
+  parser.add_argument('--final_path_save', type=str, default="./checkpoints/my_checkpoint",
+                                                    help='here will be saved final weights of the trained model')
+  parser.add_argument('--plot_path_save', type=str, default="./checkpoints/my_checkpoint",
+                                                    help='here will be saved final plots of the trained model')
   parser.add_argument('--save_weights', action='store_true', help='whether to save weights after training')
   parser.add_argument('--use_pretrained', action='store_true', help='whether to use pretrained model')
   parser.add_argument('--save_plot', action='store_true', help='whether to save graphs of the training loss and metric')
@@ -99,8 +100,8 @@ if __name__=="__main__":
   y_train = pd.read_csv(args.path_y_train)
   y_train['EncodedPixels'] += ' '
   y_group = y_train.groupby(by='ImageId')['EncodedPixels'].sum()
-  y_group = y_group.str.split(' ')
+  y_group = y_group.str.split(' ') 
   # call train() with all arguments; it will return the model, history of training loss and metric, loss and dice score on the test data
   unet, hist, loss, dice_score = train(y_group, args.epochs, args.img_height, args.img_width, args.batch_size, args.checkpoint_path_load,
-        args.path_img_train, args.path_img_test, args.checkpoint_path_save, args.save_weights, args.use_pretrained, args.save_plot, args.eval_only, 
-        epoch_save=args.epoch_save, save_mode=args.save_mode, drop_prob=args.drop_prob)
+        args.path_img_train, args.path_img_test, args.best_path_save, args.final_path_save, args.plot_path_save, args.save_weights, args.use_pretrained, args.save_plot, args.eval_only, 
+        drop_prob=args.drop_prob)
