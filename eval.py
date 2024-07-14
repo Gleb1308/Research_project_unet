@@ -47,4 +47,4 @@ if __name__=="__main__":
     d['test_metric'].append(dice_score)
 
   df = pd.DataFram(d)
-  df.to_csv('./Test results/models_eval.csv')
+  df.to_csv('./Test_results/models_eval.csv')
