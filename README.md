@@ -53,7 +53,9 @@ Adam optimizer and BinaryCrossentropy loss function on images of size (128,128).
 
 If you want to train model from scratch or use pretrained model you can run file train.py:
 ```bash
-python train.py --epochs 20 --path_img_train '<path_to_train_data>' --checkpoint_path_save '<path to save weights>' --save_weights --save_plot
+python Research_project_unet/train.py --epochs 40 --path_img_train $path_img_train --best_path_save $best_path_save \
+--final_path_save $final_path_save --plot_path_save $plot_path_save --save_weights --save_plot --drop_prob $drop_prob \
+--path_y_train $path_y_train --path_img_test $path_img_test
 ```
 Detailed information you can get by such command - python train.py --help
 
