@@ -40,8 +40,8 @@ this generator you can check in Model_data/data_generator.py file. During traini
 <p>Also were tested optimizers - Adam and RmsProp, metric - dice_score (see its implementation in Loss_metric/metric.py file).
 Each model trained 40 epochs with batch_size=32. Adam has nearly the same results with bfce and bce (68-69% dice_score). RmsProp gave the best result -
 nearly 70% dice_score. The best results gave us bce with adam and rmsprop (they had the most stable training and one of the best dice_scores).
-All information about testing results with different loss fucntions and optimizers you can find in the "Test_results/test_metric".</p>
-<p>Rmsprop omtimizer is a better choice also because it gave us smaller (in Mb) model (rmsprop - 60 Mb, adam > 77Mb, however there is no much decrease in dice score)- such effect can be caused by more stable training process compared to Adam optimizer. So after that unet model (rmsprop optimizer) was tested with other values of dropping rate ([0.08, 0.17, 0.5, 0.75, 0.9]). Model was initial value drop_prob=0.3 has dice_score=0.7. Best model according to dice score became model with drop_prob=0.17 - dice score = 0.71 . The results of such tests you can find in “Test_results/models_eval”.</p>
+All information about testing results with different loss fucntions and optimizers you can find in the "Test_results/test_metric.csv".</p>
+<p>Rmsprop omtimizer is a better choice also because it gave us smaller (in Mb) model (rmsprop - 60 Mb, adam > 77Mb, however there is no much decrease in dice score)- such effect can be caused by more stable training process compared to Adam optimizer. So after that unet model (rmsprop optimizer) was tested with other values of dropping rate ([0.08, 0.17, 0.5, 0.75, 0.9]). Model was initial value drop_prob=0.3 has dice_score=0.7. Best model according to dice score became model with drop_prob=0.17 - dice score = 0.71 . The results of such tests you can find in “Test_results/models_eval.csv”.</p>
 
 # Pretrained weights
 
