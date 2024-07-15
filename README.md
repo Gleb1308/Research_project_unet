@@ -46,7 +46,8 @@ All information about testing results with different loss fucntions and optimize
 # Pretrained weights
 
 In the folder "Pretrained_models" example of saved checkpoint is folder 'adam_bce_ep40' - checkpoint for unet that was traing 40 epochs using
-Adam optimizer and BinaryCrossentropy loss function on images of size (128,128). Another typical example is 'adam_bce_ep40+40_image=256' - checkpoint for unet that was firstly trained on the images of size = (128,128) (40 epochs), then - on images of size = (256,256) (40 epochs) (dice_score of this model = 75% on the images of size 256). There were other models with different dropout rate. Weights for all these models can be found in another github repo - https://github.com/Gleb1308/Weights-for-unet.git .
+Adam optimizer and BinaryCrossentropy loss function on images of size (128,128). Another typical example is 'adam_bce_ep40+40_image=256' - checkpoint for unet that was firstly trained on the images of size = (128,128) (40 epochs), then - on images of size = (256,256) (40 epochs) (dice_score of this model = 75% on the images of size 256). There were other models with different dropout rate. Weights for all these models can be found in another github repo - https://github.com/Gleb1308/Weights-for-unet.git . In this repo you will find such folders that contains weghts for various dropout rates - 
+"Best_saved_weights" (weights that had the best dice score on training data duiring training), "Final_saved_weights" (weights at the of the training, there aren't such weights that are copies to some other weights in "Best_saved_weights" folder).
 
 # Scripts for training and inferencing
 
