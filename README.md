@@ -12,16 +12,16 @@ know how to install datasets from command line)
 
 # EDA
 
-After EDA analysis it was found that approximately 78% of the images do not contain any ships.
+<p>After EDA analysis it was found that approximately 78% of the images do not contain any ships.
 This is not too large imbalance in data so ordinary bce (binary cross entropy) as a loss function can be used.
 Histograms of the distribution of the number of ships and the total area of ​​ships per image were also constructed.
-From these histograms it follows that the smaller the number of ships or the smaller the total area, the higher the probability of meeting the corresponding ships.
-Thus, if you apply a boxplot, it will treat images with a large number of ships or a large area as outliers, but they are actually quite useful images.
-In addition, this may indicate some imbalance in the data and it is possible that together with the usual bce bfce (binary focal cross entropy) should also be tested.
-The pie chart of pixels shows that only 0.1% of all pixels belong to some ship but this is unlikely to indicate a large imbalance in the data
-because many pixels are from the same image and thus there will be some relationship between them and therefore each pixel cannot be treated as an independent instance of data.
-Also further studies during training will show that weighted bce does not provide any improvements in model training.
-All information about EDA analysis can be found in the EDA.ipynb file.
+From these histograms it follows that the smaller the number of ships or the smaller the total area, the higher the probability of meeting the corresponding ships.</p>
+<p>Thus, if you apply a boxplot, it will treat images with a large number of ships or a large area as outliers, but they are actually quite useful images.
+In addition, this may indicate some imbalance in the data and it is possible that together with the usual bce bfce (binary focal cross entropy) should also be tested.</p>
+<p>The pie chart of pixels shows that only 0.1% of all pixels belong to some ship but this is unlikely to indicate a large imbalance in the data
+because many pixels are from the same image and thus there will be some relationship between them and therefore each pixel cannot be treated as an independent instance of data.</p>
+<p>Also further studies during training will show that weighted bce does not provide any improvements in model training.
+All information about EDA analysis can be found in the EDA.ipynb file.</p>
 
 # Architecture of the model
 
@@ -46,7 +46,7 @@ All information about testing results with different loss fucntions and optimize
 # Pretrained weights
 
 In the folder "Pretrained_models" example of saved checkpoint is folder 'adam_bce_ep40' - checkpoint for unet that was traing 40 epochs using
-Adam optimizer and BinaryCrossentropy loss function on images of size (128,128). Another typical example is 'adam_bce_ep40+40_image=256' - checkpoint for unet that was firstly trained on the images of size = (128,128) (40 epochs), then - on images of size = (256,256) (40 epochs) (dice_score of this model = 75% on the images of size 256). There were other models with different dropout rate. All these models can be found in another github repo - https://github.com/Gleb1308/Weights_Unet.git .
+Adam optimizer and BinaryCrossentropy loss function on images of size (128,128). Another typical example is 'adam_bce_ep40+40_image=256' - checkpoint for unet that was firstly trained on the images of size = (128,128) (40 epochs), then - on images of size = (256,256) (40 epochs) (dice_score of this model = 75% on the images of size 256). There were other models with different dropout rate. Weights for all these models can be found in another github repo - https://github.com/Gleb1308/Weights-for-unet.git .
 
 # Scripts for training and inferencing
 
@@ -69,3 +69,5 @@ python Research_project_unet/eval.py --model_paths $model_paths --model_names $m
 ```
 model_paths is a string that contains paths to the model weights split by comma.
 Detailed information you can get by such command - python eval.py --help
+
+You can also check examples how to use all these commands in the file - "train/test_notebook.ipynb" .
