@@ -30,9 +30,12 @@ def train(y_group, epochs, img_height, img_width, batch_size, checkpoint_path_lo
   if not eval_only:
     # training the model using data generator
     traingen = CustomDataGen(y_group, path_img_train, batch_size, use_bool=False, resize=True, height=img_height, width=img_width)
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='Dice_score', 
-                                                     mode='max')
-    model_history = unet.fit(traingen, epochs=EPOCHS, callbacks=[cp_callback])
+    if save_weights:
+      cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=best_path_save, verbose=1, save_weights_only=True, save_best_only=True, monitor='Dice_score', 
+                                                       mode='max')
+      model_history = unet.fit(traingen, epochs=EPOCHS, callbacks=[cp_callback])
+    else:
+      model_history = unet.fit(traingen, epochs=EPOCHS)
     if save_plot:
       fig, axs = plt.subplots(1, 2, figsize=(12, 6))
       train_loss = model_history.history['loss']
