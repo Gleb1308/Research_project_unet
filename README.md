@@ -57,6 +57,7 @@ python Research_project_unet/train.py --epochs 40 --path_img_train $path_img_tra
 --final_path_save $final_path_save --plot_path_save $plot_path_save --save_weights --save_plot --drop_prob $drop_prob \
 --path_y_train $path_y_train --path_img_test $path_img_test
 ```
+drop_prob - dropout rate to use during training (by default drop_prob=0.3)
 Detailed information you can get by such command - python train.py --help
 
 If you want use already trained model in inference mode you can run file inference.py:
