@@ -60,4 +60,5 @@ if __name__=="__main__":
 
   df = pd.DataFrame(d)
   df_sort = df.sort_values(by='test_metric', ascending=False, ignore_index=True)
+  os.makedirs('./Test_results', exist_ok=True)
   df_sort.to_csv('./Test_results/models_eval.csv')
