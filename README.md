@@ -35,17 +35,18 @@ You can find implementation of the model in the Model_data/model.py file.
 
 # Training and testing
 
-For training custom data generator was used as it was unreal (at least too ineffective) to download all 10k in RAM. Realization of
-this generator you can check in Model_data/data_generator.py file. During training were tested loss functions - bce, bfce and weighted_bce(didn't give any results).
-Also were tested optimizers - Adam and RmsProp, metric - dice_score (see its implementation in Loss_metric/metric.py file).
+<p>For training custom data generator was used as it was unreal (at least too ineffective) to download all 10k in RAM. Realization of
+this generator you can check in Model_data/data_generator.py file. During training were tested loss functions - bce, bfce and weighted_bce(didn't give any results).</p>
+<p>Also were tested optimizers - Adam and RmsProp, metric - dice_score (see its implementation in Loss_metric/metric.py file).
 Each model trained 40 epochs with batch_size=32. Adam has nearly the same results with bfce and bce (68-69% dice_score). RmsProp gave the best result -
 nearly 70% dice_score. The best results gave us bce with adam and rmsprop (they had the most stable training and one of the best dice_scores).
-All information about testing results with different loss fucntions and optimizers you can find in the "Test_results/test_metric".
+All information about testing results with different loss fucntions and optimizers you can find in the "Test_results/test_metric".</p>
+
 
 # Pretrained weights
 
 In the folder "Pretrained_models" example of saved checkpoint is folder 'adam_bce_ep40' - checkpoint for unet that was traing 40 epochs using
-Adam optimizer and BinaryCrossentropy loss function on images of size (128,128). Another typical example is 'adam_bce_ep40+40_image=256' - checkpoint for unet that was firstly trained on the images of size = (128,128) (40 epochs), then - on images of size = (256,256) (40 epochs) (dice_score of this model = 75% on the images of size 256). There were other models with different dropout rate. All these models can be found in another github repo - https://github.com/Gleb1308/Weights_Unet.git
+Adam optimizer and BinaryCrossentropy loss function on images of size (128,128). Another typical example is 'adam_bce_ep40+40_image=256' - checkpoint for unet that was firstly trained on the images of size = (128,128) (40 epochs), then - on images of size = (256,256) (40 epochs) (dice_score of this model = 75% on the images of size 256). There were other models with different dropout rate. All these models can be found in another github repo - https://github.com/Gleb1308/Weights_Unet.git .
 
 # Scripts for training and inferencing
 
